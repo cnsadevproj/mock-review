@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { isGasConnected } from '@/lib/gas'
+import { getRole } from '@/lib/role'
 import Spinner from '@/components/Spinner'
 import { preloadUserData } from '@/lib/sync'
 import { getPastExams } from '@/lib/exams'
@@ -30,7 +31,10 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/')
-  }, [status, router])
+    if (session?.user?.email && getRole(session.user.email) === 'teacher') {
+      router.push('/teacher')
+    }
+  }, [status, session, router])
 
   const registered = useRef(false)
   useEffect(() => {
