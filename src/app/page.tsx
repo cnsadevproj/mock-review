@@ -53,7 +53,7 @@ export default function LoginPage() {
                 onClick={() =>
                   signIn('credentials', {
                     email: '99999@cnsa.hs.kr',
-                    name: '민수정',
+                    name: '테스트',
                     callbackUrl: '/student',
                   })
                 }
