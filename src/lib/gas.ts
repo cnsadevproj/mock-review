@@ -64,6 +64,12 @@ export async function gasGetAllUsers() {
   })
 }
 
+export async function gasGetPapers(folderId: string) {
+  return gasCall<Record<string, Record<string, { url: string; label: string }[]>>>({
+    action: 'getPapers', folderId,
+  })
+}
+
 export async function gasSaveSchedule(email: string, data: Record<string, unknown>, weekendSlots: string[]) {
   return gasCall({ action: 'saveSchedule', email, data, weekendSlots })
 }

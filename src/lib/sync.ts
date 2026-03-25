@@ -1,4 +1,5 @@
 import { isGasConnected, gasGetResponses, gasGetPlans, gasGetSchedule, gasGetReflection, upsertUser } from './gas'
+import { loadPapersFromDrive } from '@/data/papers'
 
 let syncQueue: (() => Promise<unknown>)[] = []
 let syncing = false
@@ -49,6 +50,8 @@ export async function preloadUserData(email: string, name: string, examIds: stri
 
 async function _preload(email: string, name: string, examIds: string[]) {
   if (!isGasConnected()) return
+
+  loadPapersFromDrive().catch(() => {})
 
   try {
     await upsertUser(email, name)

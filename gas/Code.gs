@@ -33,6 +33,7 @@ function handleAction(action, params) {
     case 'getClassPlans': return getClassPlans(params.examId)
     case 'getSubjectTree': return getSubjectTree()
     case 'getAllUsers': return getAllUsers()
+    case 'getPapers': return getPapers(params.folderId)
     case 'saveSchedule': return saveSchedule(params)
     case 'getSchedule': return getSchedule(params.email)
     case 'saveReflection': return saveReflection(params)
@@ -273,5 +274,67 @@ function getReflection(email, examId) {
   for (let i = data.length - 1; i >= 1; i--) {
     if (data[i][0] === email && data[i][1] === examId) return JSON.parse(data[i][2])
   }
+  return null
+}
+
+// === Papers (Drive) ===
+function getPapers(parentFolderId) {
+  var parentFolder = DriveApp.getFolderById(parentFolderId)
+  var subFolders = parentFolder.getFolders()
+  var result = {}
+
+  while (subFolders.hasNext()) {
+    var folder = subFolders.next()
+    var folderName = folder.getName()
+    var match = folderName.match(/^(\d{4})-(\d{2})$/)
+    if (!match) continue
+
+    var examId = 'exam_' + match[1] + match[2]
+    var files = folder.getFiles()
+    var papers = {}
+
+    while (files.hasNext()) {
+      var file = files.next()
+      var name = file.getName().replace(/\.pdf$/i, '')
+      var id = file.getId()
+      var url = 'https://drive.google.com/file/d/' + id + '/preview'
+
+      var subject = mapFileNameToSubject(name)
+      if (subject) {
+        if (!papers[subject]) papers[subject] = []
+        papers[subject].push({ url: url, label: name })
+      }
+    }
+    result[examId] = papers
+  }
+  return result
+}
+
+function mapFileNameToSubject(name) {
+  var n = name.toLowerCase()
+  if (n.includes('국어')) return '국어'
+  if (n.includes('수학') && (n.includes('확률') || n.includes('확통'))) return '확률과 통계'
+  if (n.includes('수학') && n.includes('미적')) return '미적분'
+  if (n.includes('수학') && n.includes('기하')) return '기하'
+  if (n.includes('수학')) return '수학'
+  if (n.includes('영어')) return '영어'
+  if (n.includes('한국사')) return '한국사'
+  if (n.includes('물리') && n.includes('2')) return '물리학 II'
+  if (n.includes('물리')) return '물리학 I'
+  if (n.includes('화학') && n.includes('2')) return '화학 II'
+  if (n.includes('화학')) return '화학 I'
+  if (n.includes('생명') && n.includes('2')) return '생명과학 II'
+  if (n.includes('생명')) return '생명과학 I'
+  if (n.includes('지구') && n.includes('2')) return '지구과학 II'
+  if (n.includes('지구')) return '지구과학  I'
+  if (n.includes('생활') && n.includes('윤리')) return '생활과 윤리'
+  if (n.includes('윤리') && n.includes('사상')) return '윤리와 사상'
+  if (n.includes('한국지리') || n.includes('한지')) return '한국지리'
+  if (n.includes('세계지리') || n.includes('세지')) return '세계지리'
+  if (n.includes('동아시아')) return '동아시아사'
+  if (n.includes('세계사')) return '세계사'
+  if (n.includes('정치') || n.includes('정법')) return '정치와 법'
+  if (n.includes('경제')) return '경제'
+  if (n.includes('사회문화') || n.includes('사문')) return '사회문화'
   return null
 }
