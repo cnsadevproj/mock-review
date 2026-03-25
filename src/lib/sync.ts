@@ -1,9 +1,9 @@
 import { isGasConnected, gasGetResponses, gasGetPlans, gasGetSchedule, gasGetReflection, upsertUser } from './gas'
 
-let syncQueue: (() => Promise<void>)[] = []
+let syncQueue: (() => Promise<unknown>)[] = []
 let syncing = false
 
-export function queueSync(fn: () => Promise<void>) {
+export function queueSync(fn: () => Promise<unknown>) {
   syncQueue.push(fn)
   processQueue()
 }

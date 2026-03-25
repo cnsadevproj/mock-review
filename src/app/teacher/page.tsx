@@ -444,7 +444,7 @@ export default function TeacherDashboard() {
   const [studentDetail, setStudentDetail] = useState<{
     responses: ClassResponse[]
     plans: { subjectName: string; questionNo: number; rank: number; goal: string; textbook: string; hours: string; period: string; notes: string; learnings: string }[]
-    schedule: unknown
+    schedule: { data: Record<string, Record<string, { subject: string }>>; weekendSlots: string[] } | null
     reflection: Record<string, string> | null
   } | null>(null)
   const [detailLoading, setDetailLoading] = useState(false)
@@ -567,7 +567,7 @@ export default function TeacherDashboard() {
         gasGetSchedule(email).catch(() => null),
         gasGetReflection(email, exam.examId).catch(() => null),
       ])
-      setStudentDetail({ responses, plans: plans || [], schedule, reflection })
+      setStudentDetail({ responses, plans: plans || [], schedule: schedule as { data: Record<string, Record<string, { subject: string }>>; weekendSlots: string[] } | null, reflection })
     } catch {
       setStudentDetail(null)
     }

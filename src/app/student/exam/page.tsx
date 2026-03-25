@@ -30,14 +30,14 @@ interface SavedDraft {
   activeSubject: string
 }
 
-function saveDraft(examId: string, data: Omit<SavedDraft, 'examId'>) {
+function saveDraft(examId: string, data: { selectedMath: string | null; selectedTamgu: string[]; wrongMap: Record<string, Map<number, WrongAnswer>>; activeSubject: string }) {
   const serialized: SavedDraft = {
     examId,
     selectedMath: data.selectedMath,
     selectedTamgu: data.selectedTamgu,
     wrongMap: Object.fromEntries(
       Object.entries(data.wrongMap).map(([k, v]) => [k, [...v.entries()]])
-    ),
+    ) as Record<string, [number, WrongAnswer][]>,
     activeSubject: data.activeSubject,
   }
   localStorage.setItem(`draft_${examId}`, JSON.stringify(serialized))
@@ -214,7 +214,7 @@ export default function ExamInputPage() {
   const handleSubmit = useCallback(async () => {
     if (saving) return
     setSaving(true)
-    const responses = []
+    const responses: WrongAnswer[] = []
     for (const [, map] of Object.entries(wrongMap)) {
       for (const wa of map.values()) responses.push(wa)
     }

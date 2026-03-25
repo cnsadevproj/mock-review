@@ -53,7 +53,7 @@ function getPastValues(field: string): string[] {
       try {
         const data = JSON.parse(localStorage.getItem(k)!) as Record<string, PlanData>
         for (const p of Object.values(data)) {
-          const v = (p as Record<string, string>)[field]
+          const v = (p as unknown as Record<string, string>)[field]
           if (v) values.add(v)
         }
       } catch { /* ignore */ }
@@ -266,7 +266,7 @@ function PlanTab() {
                       <>
                         <input
                           list={suggest ? `dl_${field}` : undefined}
-                          value={(plan as Record<string, string>)[field] || ''}
+                          value={(plan as unknown as Record<string, string>)[field] || ''}
                           onChange={(e) => updatePlan(key, field, e.target.value)}
                           placeholder={placeholder}
                           className={inputCls}
@@ -707,7 +707,7 @@ function ReflectionTab() {
   const handleSaveReflection = () => {
     saveReflection(exam.examId, data)
     if (isGasConnected() && session?.user?.email) {
-      queueSync(() => gasSaveReflection(session!.user!.email!, exam.examId, data))
+      queueSync(() => gasSaveReflection(session!.user!.email!, exam.examId, data as unknown as Record<string, string>))
     }
   }
 
