@@ -47,34 +47,6 @@ export default function LoginPage() {
             Google로 로그인
           </button>
 
-          {process.env.NODE_ENV === 'development' && (
-            <div className="space-y-2">
-              <button
-                onClick={() =>
-                  signIn('credentials', {
-                    email: '99999@cnsa.hs.kr',
-                    name: '테스트',
-                    callbackUrl: '/student',
-                  })
-                }
-                className="btn btn-ghost w-full text-sm text-muted"
-              >
-                Dev: 학생 로그인
-              </button>
-              <button
-                onClick={() =>
-                  signIn('credentials', {
-                    email: 'pantarei01@cnsa.hs.kr',
-                    name: '신도경',
-                    callbackUrl: '/teacher',
-                  })
-                }
-                className="btn btn-ghost w-full text-sm text-muted"
-              >
-                Dev: 교사 로그인
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </div>
