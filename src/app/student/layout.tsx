@@ -8,6 +8,7 @@ import { isGasConnected } from '@/lib/gas'
 import { getRole } from '@/lib/role'
 import Spinner from '@/components/Spinner'
 import { preloadUserData } from '@/lib/sync'
+import DevToolsBlocker from '@/components/DevToolsBlocker'
 import { getPastExams } from '@/lib/exams'
 
 const tabs = [
@@ -55,6 +56,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
 
   return (
     <div className="flex flex-col h-screen">
+      <DevToolsBlocker />
       <header className="glass-header sticky top-0 z-50 flex items-center justify-between px-5 py-3 shrink-0">
         <h1 className="font-extrabold text-[1.1rem] text-foreground">수능 약점리스트</h1>
         <div className="flex items-center gap-3">

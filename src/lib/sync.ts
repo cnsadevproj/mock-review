@@ -16,7 +16,7 @@ async function processQueue() {
     try {
       await fn()
     } catch (e) {
-      console.error('Sync failed:', e)
+      /* sync failed silently */
     }
   }
   syncing = false

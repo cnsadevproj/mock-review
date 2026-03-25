@@ -27,6 +27,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-full flex flex-col">
+        <script dangerouslySetInnerHTML={{ __html: `
+          if (typeof window !== 'undefined' && location.hostname !== 'localhost') {
+            console.log = function(){};
+            console.warn = function(){};
+            console.error = function(){};
+            console.info = function(){};
+            console.debug = function(){};
+          }
+        `}} />
         <Providers>{children}</Providers>
       </body>
     </html>
